@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PlayerStats : MonoBehaviour
 {
 
     private uint health;
     private uint money;
+    public Text text;
 
     public static PlayerStats instance; 
    // private HpBar hpBar;
@@ -79,6 +81,7 @@ public class PlayerStats : MonoBehaviour
     public void IncreacseMoney(uint reward)
     {
         money += reward;
+        text.text = "Gold: " + money;
         Debug.Log(money);
     }
 }
