@@ -10,12 +10,20 @@ public class EnemyBase : MonoBehaviour
     // Награда за убийство моба
     // TODO: в зависимости от класса моба должа меняться
     private uint reward;
-    
+
+
     public delegate void Action(uint reward);
     // Событие смерти моба
     public static event Action isDie;
+
+    public delegate void ActionSleep(bool value);
+    // Событие смерти моба
+    public static event ActionSleep isSleep;
+
     [Range(0, 900000)]
     public float forceRepulsion;
+
+
 
     void Start ()
     {
@@ -40,14 +48,20 @@ public class EnemyBase : MonoBehaviour
                 if (contact.normal.y >= 0)
                 {
                     collision.gameObject.GetComponent<PlayerStats>().TakeDamage(damage);
-                  
-                   //доделать херню связанную с отталкиванием героя
-                   collision.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(7f * -1f, 0.4f) * forceRepulsion);//переделать как отдельные переменные
+                    //доделать херню связанную с отталкиванием героя
 
+                 //   collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 450.3333333333f + Vector2.up * 40,ForceMode2D.Impulse);//переделать как отдельные переменные
+                    isSleep(true);
+                    StartCoroutine(Sleep());
                     return;
                 }
         }
+     
     }
+
+   
+
+
     void FixedUpdate ()
     {
         if (enemy_health == 0)
@@ -58,4 +72,12 @@ public class EnemyBase : MonoBehaviour
             Destroy(this.gameObject);
         }
 	}
+
+    IEnumerator Sleep()
+    {
+        float sleepInterval = 0.5f;
+        yield return new WaitForSeconds(sleepInterval);
+        isSleep(false);
+
+    }
 }
