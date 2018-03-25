@@ -11,7 +11,6 @@ public class EnemyAI : MonoBehaviour {
     private Vector2 velocity;
     private bool seePlayer = false;
     private SpriteRenderer sprite;
-    private int count_flip = 0;//костыль
     private float xBegin;
     private float patrulRadius = 10;
     public bool sleeped;
@@ -50,8 +49,8 @@ public class EnemyAI : MonoBehaviour {
 
     // Update is called once per frame
     void FixedUpdate() {
-            if (!sleeped)
-            {
+        if (!sleeped)
+        {
             //TODO: ПРОВЕРКУ МБ НАДО
             /*  
 
@@ -59,21 +58,20 @@ public class EnemyAI : MonoBehaviour {
 
             if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) > agresionRange)//(PlayerStats.instance.transform.position.x < transform.position.x)
             {
+                seePlayer = false;
                 if (Mathf.Abs(transform.position.x - xBegin) >= patrulRadius && !seePlayer)
                 {
                     direction *= -1f;
-                    if (count_flip == 0)
+                    if (direction > 0)
                     {
                         sprite.flipX = true;
-                        count_flip++;
                     }
                     else
                     {
                         sprite.flipX = false;
-                        count_flip--;
                     }
                 }
-                seePlayer = false;
+               
                 velocity = rb.velocity;
                 velocity.x = speed * direction;
                 rb.velocity = velocity;
@@ -101,7 +99,7 @@ public class EnemyAI : MonoBehaviour {
                 }
 
             }
-            }
+        }
         
     }
 
