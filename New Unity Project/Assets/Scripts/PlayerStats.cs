@@ -63,7 +63,7 @@ public class PlayerStats : MonoBehaviour
             //TODO: Воспроизводим анимацию смерти
             //TODO: text "u die ballsucker"
             //TODO: reload scene or load scene "valhalla
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            SceneManager.LoadScene("Menu");
         }
     }
 
