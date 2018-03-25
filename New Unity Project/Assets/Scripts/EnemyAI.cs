@@ -16,7 +16,7 @@ public class EnemyAI : MonoBehaviour {
     private float patrulRadius = 10;
     public bool sleeped;
 
-    public delegate void ActionSleep();
+    public delegate void ActionSleep(bool value);
     // Событие смерти моба
     public static event ActionSleep isSleep;
 
@@ -52,7 +52,13 @@ public class EnemyAI : MonoBehaviour {
     void FixedUpdate() {
             if (!sleeped)
             {
-                //TODO: ПРОВЕРКУ МБ НАДО
+            //TODO: ПРОВЕРКУ МБ НАДО
+            /*  
+
+              }*/
+
+            if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) > agresionRange)//(PlayerStats.instance.transform.position.x < transform.position.x)
+            {
                 if (Mathf.Abs(transform.position.x - xBegin) >= patrulRadius && !seePlayer)
                 {
                     direction *= -1f;
@@ -66,39 +72,35 @@ public class EnemyAI : MonoBehaviour {
                         sprite.flipX = false;
                         count_flip--;
                     }
-
                 }
-
-                if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) > agresionRange)//(PlayerStats.instance.transform.position.x < transform.position.x)
+                seePlayer = false;
+                velocity = rb.velocity;
+                velocity.x = speed * direction;
+                rb.velocity = velocity;
+            }
+            else if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) <= agresionRange) //(PlayerStats.instance.transform.position.x > transform.position.x)
+            {
+                seePlayer = true;
+                if (PlayerStats.instance.transform.position.x < transform.position.x)
                 {
-                    seePlayer = false;
-                    velocity = rb.velocity;
+                    direction = -1f;
                     velocity.x = speed * direction;
                     rb.velocity = velocity;
+                    sprite.flipX = false;
                 }
-                else if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) <= agresionRange) //(PlayerStats.instance.transform.position.x > transform.position.x)
+                else if (PlayerStats.instance.transform.position.x > transform.position.x)
                 {
-                    seePlayer = true;
-                    if (PlayerStats.instance.transform.position.x < transform.position.x)
-                    {
-                        direction = -1f;
-                        velocity.x = speed * direction;
-                        rb.velocity = velocity;
-                        sprite.flipX = false;
-                    }
-                    else if (PlayerStats.instance.transform.position.x > transform.position.x)
-                    {
-                        direction = 1f;
-                        velocity.x = speed * direction;
-                        rb.velocity = velocity;
-                        sprite.flipX = true;
-                    }
-                    else if (PlayerStats.instance.transform.position.x == transform.position.x)
-                    {
-
-                    }
-
+                    direction = 1f;
+                    velocity.x = speed * direction;
+                    rb.velocity = velocity;
+                    sprite.flipX = true;
                 }
+                else if (PlayerStats.instance.transform.position.x == transform.position.x)
+                {
+                    isSleep(true);
+                }
+
+            }
             }
         
     }
