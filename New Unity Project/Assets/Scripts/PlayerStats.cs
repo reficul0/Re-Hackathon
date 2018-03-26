@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Threading;
 
 public class PlayerStats : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class PlayerStats : MonoBehaviour
     public delegate void ActionDamage(uint damage);
     // Событие, вызываемое во время получения игроком урона
     public static event ActionDamage takeDamage;
+
 
     /// <summary>
     /// Вызывается когда объект появляется на сцене
@@ -46,23 +48,27 @@ public class PlayerStats : MonoBehaviour
         health = 3;
         money = 0;
         instance = this;
+    
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
         // Умираем если здоровье упало до 0
-        if (health == 0)
+        if (health == 0 || GameObject.FindGameObjectWithTag("Enemy") == null)
             Die();
     }
 
     private void Die()
     {
-        if (health == 0)
+        //if (health == 0) 
         {
             //TODO: Воспроизводим анимацию смерти
             //TODO: text "u die ballsucker"
             //TODO: reload scene or load scene "valhalla
+            //GameObject.FindGameObjectWithTag("DeadTitle").SetActive(true);
+            //re.GetComponent<SpriteRenderer>;
+            Thread.Sleep(2000);
             SceneManager.LoadScene("Menu");
         }
     }
