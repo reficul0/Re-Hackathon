@@ -80,13 +80,13 @@ public class EnemyAI : MonoBehaviour {
                     {
                         sprite.flipX = true;
                     }
-                    else if(direction <= 0)
+                    else if(direction < 0)
                     {
                         sprite.flipX = false;
                     }
                 }
                 float trans = transform.position.x - xBegin;
-                if ( Mathf.Abs(trans) < 1f )
+                if ( Mathf.Abs(trans) < 1 )
                 {
                     seePlayer = false;
                     returningOnBase = false;
@@ -96,7 +96,7 @@ public class EnemyAI : MonoBehaviour {
                 rb.velocity = velocity;
             }
             else if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) <= agresionRange
-                  && Mathf.Abs(PlayerStats.instance.transform.position.y - transform.position.y) < 0.1f) //(PlayerStats.instance.transform.position.x > transform.position.x)
+                  && Mathf.Abs(PlayerStats.instance.transform.position.y - transform.position.y) < 0.1) //(PlayerStats.instance.transform.position.x > transform.position.x)
             {
                 seePlayer = true;
                 if (PlayerStats.instance.transform.position.x < transform.position.x)
