@@ -6,7 +6,7 @@ public class EnemyBase : MonoBehaviour
 {
     
     private ushort enemy_health;
-    private uint damage;
+    public uint damage;
     // Награда за убийство моба
     // TODO: в зависимости от класса моба должа меняться
     private uint reward;
@@ -16,8 +16,8 @@ public class EnemyBase : MonoBehaviour
     // Событие смерти моба
     public static event Action isDie;
 
-    public delegate void ActionSleep(bool value);
-    // Событие смерти моба
+    public delegate void ActionSleep(bool value, GameObject enemy);
+    // Событие засыпания после удара  моба
     public static event ActionSleep isSleep;
 
     [Range(0, 900000)]
@@ -51,12 +51,12 @@ public class EnemyBase : MonoBehaviour
                     //доделать херню связанную с отталкиванием героя
 
                  //   collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 450.3333333333f + Vector2.up * 40,ForceMode2D.Impulse);//переделать как отдельные переменные
-                    isSleep(true);
-                    StartCoroutine(Sleep());
+                    isSleep(true, collision.otherCollider.gameObject );
+                    StartCoroutine(Sleep(collision.otherCollider.gameObject));
+                    
                     return;
                 }
         }
-     
     }
 
    
@@ -73,11 +73,10 @@ public class EnemyBase : MonoBehaviour
         }
 	}
 
-    IEnumerator Sleep()
+    IEnumerator Sleep(GameObject enemy)
     {
-        float sleepInterval = 0.5f;
+        float sleepInterval = 1.5f;
         yield return new WaitForSeconds(sleepInterval);
-        isSleep(false);
-
+        isSleep(false, enemy);
     }
 }

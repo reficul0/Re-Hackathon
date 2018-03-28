@@ -10,13 +10,14 @@ public class EnemyAI : MonoBehaviour {
     private Rigidbody2D rb = null;
     private Vector2 velocity;
     private bool seePlayer = false;
+    private bool returningOnBase;
     private SpriteRenderer sprite;
     private float xBegin;
     private float patrulRadius = 10;
     public bool sleeped;
 
-    public delegate void ActionSleep(bool value);
-    // Событие смерти моба
+    public delegate void ActionSleep(bool value, GameObject enemy);
+    // Событие засыпания моба после удара
     public static event ActionSleep isSleep;
 
     private void OnEnable()
@@ -34,49 +35,68 @@ public class EnemyAI : MonoBehaviour {
         EnemyBase.isSleep -= SetSleeped;
     }
     
-    void SetSleeped(bool value)
+    void SetSleeped(bool value, GameObject enemy)
     {
-        sleeped = value;
+        if(enemy == gameObject)
+            sleeped = value;
     }
 
-    void Start () {
+    void Start ()
+    {
         rb = GetComponent<Rigidbody2D>();
         sprite = GetComponent<SpriteRenderer>();
         xBegin = transform.position.x;
         sleeped = false;
-  
-	}
+        returningOnBase = false;
+    }
 
     // Update is called once per frame
-    void FixedUpdate() {
+    void FixedUpdate()
+    {
+        //TODO: могут появиться проблемы если толкнуть моба в спину, но это не точно
         if (!sleeped)
         {
-            //TODO: ПРОВЕРКУ МБ НАДО
-            /*  
-
-              }*/
-
-            if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) > agresionRange)//(PlayerStats.instance.transform.position.x < transform.position.x)
+            if ( Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) > agresionRange || returningOnBase
+              && Mathf.Abs(PlayerStats.instance.transform.position.y - transform.position.y) > 0)//(PlayerStats.instance.transform.position.x < transform.position.x)
             {
-                seePlayer = false;
-                if (Mathf.Abs(transform.position.x - xBegin) >= patrulRadius && !seePlayer)
+                float wayToStartPosition = transform.position.x - xBegin;
+
+                if (seePlayer && !returningOnBase)
                 {
-                    direction *= -1f;
+
+                    if (wayToStartPosition < 0 && direction < 0
+                     || wayToStartPosition > 0 && direction > 0)
+                    {
+                        direction *= -1f;
+                    }
+                    
+                    returningOnBase = true;
+                }   
+                else if ( Mathf.Abs(wayToStartPosition) >= patrulRadius )
+                {
+                    if(!returningOnBase)
+                        direction *= -1f;
                     if (direction > 0)
                     {
                         sprite.flipX = true;
                     }
-                    else
+                    else if(direction <= 0)
                     {
                         sprite.flipX = false;
                     }
                 }
-               
+                float trans = transform.position.x - xBegin;
+                if ( Mathf.Abs(trans) < 1f )
+                {
+                    seePlayer = false;
+                    returningOnBase = false;
+                }
                 velocity = rb.velocity;
                 velocity.x = speed * direction;
                 rb.velocity = velocity;
             }
-            else if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) <= agresionRange) //(PlayerStats.instance.transform.position.x > transform.position.x)
+            else if (Mathf.Abs(PlayerStats.instance.transform.position.x - transform.position.x) <= agresionRange
+                  && Mathf.Abs(PlayerStats.instance.transform.position.y - transform.position.y) < 0.1f) //(PlayerStats.instance.transform.position.x > transform.position.x)
             {
                 seePlayer = true;
                 if (PlayerStats.instance.transform.position.x < transform.position.x)
@@ -95,7 +115,7 @@ public class EnemyAI : MonoBehaviour {
                 }
                 else if (PlayerStats.instance.transform.position.x == transform.position.x)
                 {
-                    isSleep(true);
+                    isSleep(true, gameObject);
                 }
 
             }
@@ -103,9 +123,8 @@ public class EnemyAI : MonoBehaviour {
         
     }
 
-    public float GetDirection() {
+    public float GetDirection()
+    {
         return direction;
     }
-
-  
 }

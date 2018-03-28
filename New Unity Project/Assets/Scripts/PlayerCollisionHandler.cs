@@ -27,6 +27,5 @@ public class PlayerCollisionHandler : MonoBehaviour {
                     collision.gameObject.GetComponent<EnemyBase>().Die();
                     return;
                 }  
-           // Destroy(collision.gameObject);   
     }
 }

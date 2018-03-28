@@ -68,8 +68,8 @@ public class PlayerStats : MonoBehaviour
             //TODO: reload scene or load scene "valhalla
             //GameObject.FindGameObjectWithTag("DeadTitle").SetActive(true);
             //re.GetComponent<SpriteRenderer>;
-            Thread.Sleep(2000);
-            SceneManager.LoadScene("Menu");
+            //Thread.Sleep(2000);
+            //SceneManager.LoadScene("Menu");
         }
     }
 
