@@ -50,7 +50,7 @@ public class EnemyBase : MonoBehaviour
                     collision.gameObject.GetComponent<PlayerStats>().TakeDamage(damage);
                     //доделать херню связанную с отталкиванием героя
 
-                 //   collision.gameObject.GetComponent<Rigidbody2D>().AddForce(Vector2.left * 450.3333333333f + Vector2.up * 40,ForceMode2D.Impulse);//переделать как отдельные переменные
+                    collision.gameObject.GetComponent<Rigidbody2D>().AddForce(new Vector2(5f, 2.5f));//переделать как отдельные переменные
                     isSleep(true, collision.otherCollider.gameObject );
                     StartCoroutine(Sleep(collision.otherCollider.gameObject));
                     

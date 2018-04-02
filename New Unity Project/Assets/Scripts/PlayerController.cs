@@ -11,20 +11,26 @@ public class PlayerController : MonoBehaviour {
     private Rigidbody2D rb = null;
     //private Animator anim = null;
     private Vector2 velocity;
-
     private SpriteRenderer sprite;
-
     private bool isGrounded = false;
+
 
     private void Start()
     {
         sprite = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         //anim = GetComponent<Animator>();
+        
     }
     private void FixedUpdate()
     {
-
+        bool shoot = Input.GetButtonDown("Fire1");
+        shoot |= Input.GetButtonDown("Fire2");
+        if (shoot || Input.GetKeyDown(KeyCode.E));
+        {
+            Shot weapon = GetComponent<Shot>();
+            weapon.Attack(false);
+        }
         if (Input.GetButton("Horizontal") == true)
         {
             velocity = rb.velocity;
